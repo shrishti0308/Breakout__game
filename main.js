@@ -35,6 +35,8 @@ const canvas = document.getElementById("myCanvas");
             const brickOffsetTop = 30;
             const brickOffsetLeft = 30;
 
+            let score = 0;
+
             const bricks = [];
             for(let c = 0; c < brickColumnCount; c++){
                 bricks[c] = [];
@@ -71,11 +73,36 @@ const canvas = document.getElementById("myCanvas");
                             if(x > b.x && x < b.x + brickWidth && y > b.y && b.y + brickHeight){
                                 dy = -dy;
                                 b.status = 0;
+                                score++;
+                                if(score === brickRowCount * brickColumnCount){
+                                    alert("YOU WIN, CONGRATULATIONS!");
+                                    document.location.reload();
+                                    clearInterval(interval);
+                                }
                             }
                         }
                     }
                 }
             }
+            
+
+            function drawBall(){
+                ctx.beginPath();
+                ctx.arc(x, y, ballRadius,0,Math.PI * 2);
+                ctx.fillStyle = "#0095DD";
+                ctx.fill();
+                ctx.closePath();
+
+            }
+
+            function drawPaddle(){
+                ctx.beginPath();
+                ctx.clearRect(paddleX, canvas.height - paddleHeight,  paddleWidth, paddleHeight);
+                ctx.fillStyle = "0095DD";
+                ctx.fill();
+                ctx.closePath();
+            }
+          
 
 
             function drawBricks(){
@@ -95,26 +122,12 @@ const canvas = document.getElementById("myCanvas");
                     }
                 }
             }
-            
-            function drawBall(){
-                ctx.beginPath();
-                ctx.arc(x, y, ballRadius,0,Math.PI * 2);
-                ctx.fillStyle = "#0095DD";
-                ctx.fill();
-                ctx.closePath();
 
-            }
-
-            function drawPaddle(){
-                ctx.beginPath();
-                ctx.clearRect(paddleX, canvas.height - paddleHeight,  paddleWidth, paddleHeight);
+            function drawScore(){
+                ctx.font = "16px Arial";
                 ctx.fillStyle = "0095DD";
-                ctx.fill();
-                ctx.closePath();
+                ctx.fillText(`Score: $(score)` , 8, 20);
             }
-
-         
-          
 
             function draw(){
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
