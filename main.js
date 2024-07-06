@@ -25,6 +25,7 @@ const canvas = document.getElementById("myCanvas");
             let paddleX = (canvas.width - paddleWidth) / 2;
             let rightPressed = false;
             let leftPressed = false;
+            let interval = 0;
 
             document.addEventListener("keydown" , keyDownHandler, false);
             document.addEventListener("keyup" , keyUpHandler, false);
@@ -47,7 +48,7 @@ const canvas = document.getElementById("myCanvas");
             
             function drawBall(){
                 ctx.beginPath();
-                ctx.arc(x,y,ballRadius,0,Math.PI * 2);
+                ctx.arc(x, y, ballRadius,0,Math.PI * 2);
                 ctx.fillStyle = "#0095DD";
                 ctx.fill();
                 ctx.closePath();
@@ -71,25 +72,33 @@ const canvas = document.getElementById("myCanvas");
             if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
                 dx = -dx;
             }
-            if(y + dy > canvas.height - ballRadius || y + dy < ballRadius){
+            if(y + dy < ballRadius){
                 dy = -dy;
-            }   
+            }else if(y + dy > canvas.height - ballRadius){
+                if(x > paddleX && paddleX + paddleWidth){
+                    dy = -dy;
+                }else{
+                    alert("Game Over");
+                    document.location.reload();
+                    clearInterval(interval);
+                }
+            }
             // if (rightPressed) {
             //     paddleX = Math.min(paddleX + 7, canvas.width - paddleWidth);
             //   } else if (leftPressed) {
             //     paddleX = Math.max(paddleX - 7, 0);
             //   }
 
-              if (rightPressed) {
+              if (rightPressed && paddleX < canvas.width - paddleWidth) {
                 paddleX += 7;
-                if (paddleX + paddleWidth > canvas.width) {
-                  paddleX = canvas.width - paddleWidth;
-                }
-              } else if (leftPressed) {
+                // if (paddleX + paddleWidth > canvas.width) {
+                //   paddleX = canvas.width - paddleWidth;
+                // }
+              } else if (leftPressed && paddleX > 0) {
                 paddleX -= 7;
-                if (paddleX < 0) {
-                  paddleX = 0;
-                }
+                // if (paddleX < 0) {
+                //   paddleX = 0;
+                // }
               }
             
               
@@ -99,7 +108,7 @@ const canvas = document.getElementById("myCanvas");
 
 
             function startGame(){
-                setInterval(draw, 10);
+                interval = setInterval(draw, 10);
 
             }
             
