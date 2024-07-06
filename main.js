@@ -48,7 +48,9 @@ const canvas = document.getElementById("myCanvas");
 
             document.addEventListener("keydown" , keyDownHandler, false);
             document.addEventListener("keyup" , keyUpHandler, false);
+            document.addEventListener("mousemove", mouseMoveHandler, false);
 
+           
             function keyDownHandler(e){
                 if(e.key == "Right" || e.key == "ArrowRight"){
                     rightPressed = true;
@@ -64,6 +66,14 @@ const canvas = document.getElementById("myCanvas");
                     leftPressed = false;
                 }
             }
+
+            function mouseMoveHandler(e){
+                const relativeX = e.clientX - canvas.offsetLeft;
+                if(relativeX > 0 && relativeX < canvas.width){
+                    paddleX = relativeX - paddleWidth / 2;
+                }
+            }
+            
 
             function collisionDetection(){
                 for(let c = 0; c < brickColumnCount; c++){
