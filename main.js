@@ -39,7 +39,8 @@ const canvas = document.getElementById("myCanvas");
             for(let c = 0; c < brickColumnCount; c++){
                 bricks[c] = [];
                 for(let r = 0; r < brickRowCount; r++){
-                    bricks[c][r] = {x: 0, y: 0};
+                    bricks[c][r] = {x: 0, y: 0, status: 1};
+                  
                 }
             }
 
@@ -62,9 +63,25 @@ const canvas = document.getElementById("myCanvas");
                 }
             }
 
+            function collisionDetection(){
+                for(let c = 0; c < brickColumnCount; c++){
+                    for(let r =0 ; r < brickRowCount; r++){
+                        const b = bricks[c][r];
+                        if(b.status === 1){
+                            if(x > b.x && x < b.x + brickWidth && y > b.y && b.y + brickHeight){
+                                dy = -dy;
+                                b.status = 0;
+                            }
+                        }
+                    }
+                }
+            }
+
+
             function drawBricks(){
                 for(let c = 0; c < brickColumnCount; c++){
                     for(let r = 0; r< brickRowCount; r++){
+                        if(bricks[c][r].status === 1){
                         const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
                         const brickY = c * (brickHeight + brickPadding) + brickOffsetTop;
                         bricks[c][r].x = brickX;
@@ -74,6 +91,7 @@ const canvas = document.getElementById("myCanvas");
                         ctx.fillStyle = "0095DD";
                         ctx.fill();
                         ctx.closePath();
+                        }
                     }
                 }
             }
@@ -95,6 +113,7 @@ const canvas = document.getElementById("myCanvas");
                 ctx.closePath();
             }
 
+         
           
 
             function draw(){
@@ -102,6 +121,7 @@ const canvas = document.getElementById("myCanvas");
                 drawBricks();
                 drawBall();    
                 drawPaddle();
+                collisionDetection();
                 
             if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
                 dx = -dx;
