@@ -36,6 +36,7 @@ const canvas = document.getElementById("myCanvas");
             const brickOffsetLeft = 30;
 
             let score = 0;
+            let lives = 3;
 
             const bricks = [];
             for(let c = 0; c < brickColumnCount; c++){
@@ -73,7 +74,7 @@ const canvas = document.getElementById("myCanvas");
                     paddleX = relativeX - paddleWidth / 2;
                 }
             }
-            
+
 
             function collisionDetection(){
                 for(let c = 0; c < brickColumnCount; c++){
@@ -138,12 +139,21 @@ const canvas = document.getElementById("myCanvas");
                 ctx.fillStyle = "0095DD";
                 ctx.fillText(`Score: $(score)` , 8, 20);
             }
+            
+            function drawLives(){
+                ctx.font = "16px Arial";
+                ctx.fillStyle = "0095DD";
+                ctx.fillText(`Lives: $(lives)` , canvas.width - 65, 20);
+            }
+            
 
             function draw(){
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 drawBricks();
                 drawBall();    
                 drawPaddle();
+                drawScore();
+                drawLives();
                 collisionDetection();
                 
             if(x + dx > canvas.width - ballRadius || x + dx < ballRadius){
@@ -155,9 +165,18 @@ const canvas = document.getElementById("myCanvas");
                 if(x > paddleX && paddleX + paddleWidth){
                     dy = -dy;
                 }else{
+                    lives--;
+                    if(!lives){
                     alert("Game Over");
                     document.location.reload();
                     clearInterval(interval);
+                    }else{
+                        x = canvas.width / 2;
+                        y = canvas.height - 30;
+                        dx = 2;
+                        dy =-2;
+                        paddleX = (canvas.width - paddleWidth) / 2;
+                    }
                 }
             }
             // if (rightPressed) {
@@ -181,17 +200,19 @@ const canvas = document.getElementById("myCanvas");
               
                 x += dx;
                 y += dy;
+                requestAnimationFrame(draw);
             }
 
 
-            function startGame(){
-                interval = setInterval(draw, 10);
+            // function startGame(){
+            //     interval = setInterval(draw, 10);
 
-            }
+            // }
             
 
             document.getElementById("runButton").addEventListener("click",function(){
-                startGame();
+                draw();
+                // startGame();
                 this.disabled = true;
             });
 
